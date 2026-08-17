@@ -2,9 +2,23 @@
 
 AgentScope is a focused observability and evaluation platform for multi-step AI agents. It makes a support-triage agent inspectable at the exact point where intent, evidence, tools, retries, and cost diverge.
 
-![AgentScope architecture](docs/architecture.svg)
+![AgentScope API-backed overview](docs/dashboard-overview.png)
 
-![AgentScope dashboard preview](docs/dashboard-preview.svg)
+_API-backed overview generated from the deterministic `triage-v1` benchmark. Debugging-time improvement remains explicitly unmeasured._
+
+## Product workflows
+
+### Trace replay and version diff
+
+![AgentScope baseline-to-candidate trace diff](docs/dashboard-diff.png)
+
+The dashboard executes the same replay/diff contract exposed by the CLI. This C1 comparison preserves the evaluated output while showing the exact LLM-call, span, and recorded fixture-cost deltas.
+
+### Seeded regression gate
+
+![AgentScope seeded regression gate](docs/regression-gate.png)
+
+Each row is produced by running a seeded mutation through the deterministic evaluator; the dashboard can open the corresponding mutated-to-candidate diff.
 
 ## What is implemented
 
@@ -21,15 +35,7 @@ The current implementation is a working local vertical slice. It does not claim 
 
 ## Architecture
 
-```mermaid
-flowchart LR
-  A[Demo support-triage agent] --> B[Python SDK / CLI]
-  B --> C[FastAPI telemetry API]
-  C --> D[(PostgreSQL)]
-  D --> E[Next.js dashboard]
-  E --> F[Replay + diff]
-  F --> G[Eval harness / CI gate]
-```
+![AgentScope architecture](docs/architecture.svg)
 
 ## Run locally
 
