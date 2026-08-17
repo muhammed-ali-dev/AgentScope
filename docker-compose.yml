@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: agentscope
+      POSTGRES_PASSWORD: agentscope
+      POSTGRES_DB: agentscope
+    ports:
+      - "5432:5432"
+    volumes:
+      - agentscope_pg:/var/lib/postgresql/data
+
+volumes:
+  agentscope_pg:

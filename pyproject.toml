@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentscope"
+version = "0.1.0"
+description = "Agent debugging, regression, and cost measurement toolkit"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "pydantic>=2.8",
+  "psycopg[binary]>=3.2",
+]
+
+[project.scripts]
+agentscope = "agentscope.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["agentscope*"]
