@@ -28,7 +28,7 @@ class Run(BaseModel):
     run_id: UUID = Field(default_factory=uuid4)
     scenario_id: str
     dataset_version: str = "triage-v1"
-    condition: Literal["baseline", "agentscope", "candidate"] = "agentscope"
+    condition: Literal["baseline", "agentscope", "candidate", "mutated"] = "agentscope"
     agent_version: str = "triage-agent@0.1.0"
     commit_sha: str = "local"
     status: Literal["ok", "error", "blocked"] = "ok"

@@ -26,5 +26,14 @@ def run_demo(case_id: str = "D2", condition: str = "agentscope") -> dict[str, An
         if case.tag == "cost" and condition == "baseline":
             with trace.span("llm", "post_terminal.summary", {"purpose": "unnecessary summary", "prompt_hash": "p_92a0"}, {"model": "fixture-gpt", "input_tokens": 512, "output_tokens": 96, "cost_usd": 0.0072}):
                 pass
-        root.output = case.expected
-    return trace.finish(case.expected).model_dump(mode="json")
+        output = dict(case.expected)
+        if condition == "mutated":
+            mutations = {
+                "R1": {"priority": "normal"},
+                "R2": {"status": "blocked"},
+                "R3": {"cited_doc": "policy-legacy"},
+                "R4": {"status": "resolved"},
+            }
+            output.update(mutations.get(case.case_id, {}))
+        root.output = output
+    return trace.finish(output).model_dump(mode="json")

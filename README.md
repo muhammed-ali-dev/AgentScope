@@ -11,6 +11,8 @@ AgentScope is a focused observability and evaluation platform for multi-step AI 
 - A Python SDK that records hierarchical agent, LLM, retrieval, tool, and evaluator spans.
 - A deterministic `triage-v1` benchmark with 16 debugging, regression, and cost scenarios.
 - Fixture replay and contract evaluation through the Python CLI.
+- Runnable replay and version diff commands for comparing call counts, outputs, spans, and cost.
+- Seeded regression mutations that are executed through the evaluation suite.
 - A FastAPI telemetry API with PostgreSQL persistence and a seeded local fallback.
 - A Next.js dashboard for run filtering, trace timelines, failure signals, token/cost metadata, and benchmark breakdowns.
 - PostgreSQL schema for idempotent run storage and evaluation records.
@@ -54,6 +56,8 @@ In another terminal:
 
 ```bash
 .venv/bin/python -m agentscope.cli demo --scenario D5
+.venv/bin/python -m agentscope.cli replay --scenario D5
+.venv/bin/python -m agentscope.cli diff --scenario C1 --before baseline --after candidate
 .venv/bin/python -m agentscope.cli eval
 ```
 

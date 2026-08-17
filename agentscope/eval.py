@@ -29,3 +29,31 @@ def run_benchmark(condition: str = "candidate") -> list[dict[str, Any]]:
     for case in CASES:
         results.append(evaluate(run_demo(case.case_id, condition), case))
     return results
+
+
+def run_regression_suite() -> list[dict[str, Any]]:
+    from .agent import run_demo
+
+    results = []
+    for case in CASES:
+        if case.tag == "regression":
+            result = evaluate(run_demo(case.case_id, "mutated"), case)
+            result["mutation_detected"] = not result["passed"]
+            results.append(result)
+    return results
+
+
+def diff_runs(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+    before_spans = before.get("spans", [])
+    after_spans = after.get("spans", [])
+    before_cost = sum(span.get("metadata", {}).get("cost_usd", 0) for span in before_spans)
+    after_cost = sum(span.get("metadata", {}).get("cost_usd", 0) for span in after_spans)
+    return {
+        "scenario_id": before.get("scenario_id"),
+        "output_changed": before.get("output") != after.get("output"),
+        "span_count_delta": len(after_spans) - len(before_spans),
+        "llm_call_delta": sum(s["kind"] == "llm" for s in after_spans) - sum(s["kind"] == "llm" for s in before_spans),
+        "cost_delta_usd": round(after_cost - before_cost, 6),
+        "before_run_id": before.get("run_id"),
+        "after_run_id": after.get("run_id"),
+    }
