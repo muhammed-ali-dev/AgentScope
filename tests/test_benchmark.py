@@ -20,7 +20,9 @@ class BenchmarkContractTests(unittest.TestCase):
 
     def test_timeout_has_a_traceable_error_branch(self) -> None:
         run = run_demo("D5")
-        self.assertIn("account.lookup.retry", [span["name"] for span in run["spans"]])
+        retry = next(span for span in run["spans"] if span["name"] == "account.lookup.retry")
+        self.assertEqual(retry["status"], "error")
+        self.assertEqual(retry["error"]["type"], "ToolTimeout")
 
     def test_seeded_regression_suite_detects_all_mutations(self) -> None:
         results = run_regression_suite()

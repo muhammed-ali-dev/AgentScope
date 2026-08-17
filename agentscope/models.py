@@ -52,3 +52,8 @@ class EvalResult(BaseModel):
 class IngestRequest(BaseModel):
     runs: list[Run]
     evaluations: list[EvalResult] = Field(default_factory=list)
+
+
+class ReplayRequest(BaseModel):
+    scenario_id: str
+    condition: Literal["baseline", "agentscope", "candidate", "mutated"] = "candidate"

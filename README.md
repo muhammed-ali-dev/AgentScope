@@ -14,7 +14,7 @@ AgentScope is a focused observability and evaluation platform for multi-step AI 
 - Runnable replay and version diff commands for comparing call counts, outputs, spans, and cost.
 - Seeded regression mutations that are executed through the evaluation suite.
 - A FastAPI telemetry API with PostgreSQL persistence and a seeded local fallback.
-- A Next.js dashboard for run filtering, trace timelines, failure signals, token/cost metadata, and benchmark breakdowns.
+- A Next.js dashboard with API-backed replay, baseline/candidate version diffs, run filtering, trace timelines, seeded-regression inspection, and cost comparisons.
 - PostgreSQL schema for idempotent run storage and evaluation records.
 
 The current implementation is a working local vertical slice. It does not claim measured reductions in debugging time or LLM spend yet; those require the operator and live-provider experiments described by the benchmark contract.
@@ -61,7 +61,17 @@ In another terminal:
 .venv/bin/python -m agentscope.cli eval
 ```
 
-The dashboard automatically reads from `NEXT_PUBLIC_API_URL` when the API is running and falls back to its local fixtures otherwise.
+The dashboard automatically reads from `NEXT_PUBLIC_API_URL` when the API is running. If it cannot connect within five seconds, it switches to four explicitly labeled fixture previews; replay and diff actions remain API-only and show an error instead of simulating a result.
+
+Dashboard workflows call these API endpoints:
+
+```text
+GET  /v1/runs
+POST /v1/replay
+GET  /v1/diff?scenario_id=C1&before=baseline&after=candidate
+GET  /v1/evaluations
+GET  /v1/benchmark
+```
 
 ### PostgreSQL
 

@@ -21,8 +21,9 @@ def run_demo(case_id: str = "D2", condition: str = "agentscope") -> dict[str, An
             with trace.span("llm", "duplicate.plan", {"purpose": "duplicate planning", "prompt_hash": "p_84f1"}, {"model": "fixture-gpt", "input_tokens": 188, "output_tokens": 42, "cost_usd": 0.0031}):
                 pass
         if case.case_id == "D5":
-            with trace.span("tool", "account.lookup.retry", {"customer_id": "cus_7J3M"}, {"latency_ms": 2000, "timeout": True}):
-                pass
+            with trace.span("tool", "account.lookup.retry", {"customer_id": "cus_7J3M"}, {"latency_ms": 2000, "timeout": True}) as retry:
+                retry.status = "error"
+                retry.error = {"type": "ToolTimeout", "message": "account.lookup exceeded 2000ms"}
         if case.tag == "cost" and condition == "baseline":
             with trace.span("llm", "post_terminal.summary", {"purpose": "unnecessary summary", "prompt_hash": "p_92a0"}, {"model": "fixture-gpt", "input_tokens": 512, "output_tokens": 96, "cost_usd": 0.0072}):
                 pass
